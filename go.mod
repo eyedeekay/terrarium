@@ -1,6 +1,7 @@
 module github.com/horgh/catbox
 
 require (
+	github.com/eyedeekay/sam3 v0.32.32 // indirect
 	github.com/horgh/config v0.0.0-20190101204049-770bc48a3bdf
 	github.com/horgh/irc v0.0.0-20190101204118-d089b0b5b5c5
 	github.com/kr/pretty v0.1.0 // indirect

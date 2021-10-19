@@ -1,4 +1,4 @@
-package main
+package catbox
 
 import (
 	"flag"
@@ -13,7 +13,7 @@ type Args struct {
 	ListenFD   int
 }
 
-func getArgs() *Args {
+func GetArgs() *Args {
 	configFile := flag.String("conf", "", "Configuration file.")
 	fd := flag.Int("listen-fd", -1,
 		"File descriptor with listening port to use (optional).")

@@ -1,4 +1,4 @@
-package main
+package catbox
 
 import (
 	"fmt"
@@ -17,6 +17,11 @@ type Config struct {
 	CertificateFile string
 	KeyFile         string
 	ServerName      string
+
+	// Listen on Hidden Service addresses
+	ListenI2P    string
+	ListenI2PTLS string
+	SAMAddress   string
 
 	// Description of server. This shows in WHOIS, etc.
 	ServerInfo string
@@ -99,6 +104,21 @@ func checkAndParseConfig(file string) (*Config, error) {
 	c.ListenPortTLS = "-1"
 	if m["listen-port-tls"] != "" {
 		c.ListenPortTLS = m["listen-port-tls"]
+	}
+
+	c.ListenI2P = "-1"
+	if m["listen-i2p"] != "" {
+		c.ListenI2P = m["listen-i2p"]
+	}
+
+	c.ListenI2PTLS = "-1"
+	if m["listen-i2p-tls"] != "" {
+		c.ListenI2PTLS = m["listen-i2p-tls"]
+	}
+
+	c.SAMAddress = "127.0.0.1:7656"
+	if m["sam-address"] != "" {
+		c.SAMAddress = m["sam-address"]
 	}
 
 	if m["certificate-file"] != "" {

@@ -1,4 +1,4 @@
-package main
+package catbox
 
 // CreatedDate is the date we're built. This would be nice to generate
 // dynamically, but I don't want to complicate the build.

@@ -1,14 +1,14 @@
-package main
+package catbox
 
 import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
@@ -17,6 +17,10 @@ import (
 
 	"github.com/horgh/irc"
 	"github.com/pkg/errors"
+)
+
+import (
+	"github.com/eyedeekay/sam3/helper"
 )
 
 // Catbox holds the state for this local server.
@@ -94,6 +98,10 @@ type Catbox struct {
 	// TCP plaintext and TLS listeners.
 	Listener    net.Listener
 	TLSListener net.Listener
+
+	// I2P Streaming and I2P+TLS listeners.
+	I2PListener    net.Listener
+	I2PListenerTLS net.Listener
 
 	// WaitGroup to ensure all goroutines clean up before we end.
 	WG sync.WaitGroup
@@ -198,52 +206,7 @@ const ExcessFloodThreshold = 50
 // from a user.
 const ChanModesPerCommand = 4
 
-func main() {
-	log.SetFlags(log.Ldate | log.Ltime)
-	log.SetOutput(os.Stdout)
-
-	args := getArgs()
-	if args == nil {
-		os.Exit(1)
-	}
-
-	binPath, err := filepath.Abs(os.Args[0])
-	if err != nil {
-		log.Fatalf("Unable to determine absolute path to binary: %s: %s",
-			os.Args[0], err)
-	}
-
-	cb, err := newCatbox(args.ConfigFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := cb.start(args.ListenFD); err != nil {
-		log.Fatal(err)
-	}
-
-	if cb.Restart {
-		log.Printf("Shutdown completed. Restarting...")
-
-		if err := syscall.Exec( // nolint: gas
-			binPath,
-			[]string{
-				binPath,
-				"-conf",
-				cb.ConfigFile,
-			},
-			nil,
-		); err != nil {
-			log.Fatalf("Restart failed: %s", err)
-		}
-
-		log.Fatalf("not reached")
-	}
-
-	log.Printf("Server shutdown cleanly.")
-}
-
-func newCatbox(configFile string) (*Catbox, error) {
+func NewCatbox(configFile string) (*Catbox, error) {
 	cb := Catbox{
 		ConfigFile:   configFile,
 		LocalClients: make(map[uint64]*LocalClient),
@@ -328,7 +291,7 @@ func (cb *Catbox) loadCertificate() error {
 //
 // We open the TCP port, start goroutines, and then receive messages on our
 // channels.
-func (cb *Catbox) start(listenFD int) error {
+func (cb *Catbox) Start(listenFD int) error {
 	if listenFD == -1 && cb.Config.ListenPort == "-1" &&
 		cb.Config.ListenPortTLS == "-1" {
 		log.Fatalf("You must set a listen port.")
@@ -371,6 +334,49 @@ func (cb *Catbox) start(listenFD int) error {
 
 		cb.WG.Add(1)
 		go cb.acceptConnections(cb.TLSListener)
+	}
+
+	// I2P Listener
+	if cb.Config.ListenI2P != "-1" {
+		ln, err := sam.I2PListener(cb.Config.ListenI2P, cb.Config.SAMAddress, cb.Config.ListenI2P)
+		if err != nil {
+			return fmt.Errorf("unable to listen (I2P): %s", err)
+		}
+		cb.I2PListener = ln
+		err = ioutil.WriteFile(cb.Config.ListenI2P+".i2paddresshelper", []byte("http://"+cb.Config.ListenI2P+"/?i2paddresshelper="+cb.I2PListener.Addr().String()), 0644)
+		if err != nil {
+			return fmt.Errorf("unable to write I2P addresshelper link to file: %s", err)
+		}
+		if strings.HasSuffix(cb.Config.ServerName, ".i2p") {
+			err = ioutil.WriteFile(cb.Config.ServerName+".i2paddresshelper", []byte("http://"+cb.Config.ServerName+"/?i2paddresshelper="+cb.I2PListener.Addr().String()), 0644)
+			if err != nil {
+				return fmt.Errorf("unable to write I2P addresshelper link to file: %s", err)
+			}
+		}
+		cb.WG.Add(1)
+		go cb.acceptConnections(cb.Listener)
+	}
+
+	// I2P Listener with TLS
+	if cb.Config.ListenI2PTLS != "-1" {
+		ln, err := sam.I2PListener(cb.Config.ListenI2P, cb.Config.SAMAddress, cb.Config.ListenI2P)
+		if err != nil {
+			return fmt.Errorf("unable to listen (I2P): %s", err)
+		}
+		tlsln := tls.NewListener(ln, cb.TLSConfig)
+		cb.I2PListenerTLS = tlsln
+		err = ioutil.WriteFile(cb.Config.ListenI2P+".i2paddresshelper", []byte("http://"+cb.Config.ListenI2P+"?i2paddresshelper="+cb.I2PListener.Addr().String()), 0644)
+		if err != nil {
+			return fmt.Errorf("unable to write I2P addresshelper link to file: %s", err)
+		}
+		if strings.HasSuffix(cb.Config.ServerName, ".i2p") {
+			err = ioutil.WriteFile(cb.Config.ServerName+".i2paddresshelper", []byte("http://"+cb.Config.ServerName+"?i2paddresshelper="+cb.I2PListener.Addr().String()), 0644)
+			if err != nil {
+				return fmt.Errorf("unable to write I2P addresshelper link to file: %s", err)
+			}
+		}
+		cb.WG.Add(1)
+		go cb.acceptConnections(cb.Listener)
 	}
 
 	// Alarm is a goroutine to wake up this one periodically so we can do things
@@ -997,13 +1003,34 @@ func (cb *Catbox) connectToServer(linkInfo *ServerDefinition) {
 		var err error
 
 		if linkInfo.TLS {
-			cb.noticeOpers(fmt.Sprintf("Connecting to %s with TLS...", linkInfo.Name))
+			if strings.HasSuffix(linkInfo.Hostname, ".i2p") {
+				cb.noticeOpers(fmt.Sprintf("Connecting to %s with I2P and TLS...", linkInfo.Name))
 
-			dialer := &net.Dialer{
-				Timeout: cb.Config.DeadTime,
+				cb.noticeOpers(fmt.Sprintf("Connecting to %s with I2P...",
+					linkInfo.Name))
+				I2PSession, err := sam.I2PStreamSession(cb.Config.ListenI2P+"-tls-"+linkInfo.Hostname, cb.Config.SAMAddress, cb.Config.ListenI2P+"-tls-"+linkInfo.Hostname)
+				if err == nil {
+					conn, err = I2PSession.Dial("tcp", linkInfo.Hostname)
+					if err == nil {
+						conn = tls.Client(conn, cb.TLSConfig)
+					}
+				}
+			} else {
+				cb.noticeOpers(fmt.Sprintf("Connecting to %s with TLS...", linkInfo.Name))
+
+				dialer := &net.Dialer{
+					Timeout: cb.Config.DeadTime,
+				}
+				conn, err = tls.DialWithDialer(dialer, "tcp",
+					fmt.Sprintf("%s:%d", linkInfo.Hostname, linkInfo.Port), cb.TLSConfig)
 			}
-			conn, err = tls.DialWithDialer(dialer, "tcp",
-				fmt.Sprintf("%s:%d", linkInfo.Hostname, linkInfo.Port), cb.TLSConfig)
+		} else if strings.HasSuffix(linkInfo.Hostname, ".i2p") {
+			cb.noticeOpers(fmt.Sprintf("Connecting to %s with I2P...",
+				linkInfo.Name))
+			I2PSession, err := sam.I2PStreamSession(cb.Config.ListenI2P+"-"+linkInfo.Hostname, cb.Config.SAMAddress, cb.Config.ListenI2P+"-"+linkInfo.Hostname)
+			if err == nil {
+				conn, err = I2PSession.Dial("tcp", linkInfo.Hostname)
+			}
 		} else {
 			cb.noticeOpers(fmt.Sprintf("Connecting to %s without TLS...",
 				linkInfo.Name))
