@@ -11,20 +11,20 @@ import (
 
 // Test one client sending a message to another client.
 func TestPRIVMSG(t *testing.T) {
-	catbox, err := harnessCatbox("irc.example.org", "000")
+	terrarium, err := harnessCatbox("irc.example.org", "000")
 	if err != nil {
-		t.Fatalf("error harnessing catbox: %s", err)
+		t.Fatalf("error harnessing terrarium: %s", err)
 	}
-	defer catbox.stop()
+	defer terrarium.stop()
 
-	client1 := NewClient("client1", "127.0.0.1", catbox.Port)
+	client1 := NewClient("client1", "127.0.0.1", terrarium.Port)
 	recvChan1, sendChan1, _, err := client1.Start()
 	if err != nil {
 		t.Fatalf("error starting client: %s", err)
 	}
 	defer client1.Stop()
 
-	client2 := NewClient("client2", "127.0.0.1", catbox.Port)
+	client2 := NewClient("client2", "127.0.0.1", terrarium.Port)
 	recvChan2, _, _, err := client2.Start()
 	if err != nil {
 		t.Fatalf("error starting client: %s", err)

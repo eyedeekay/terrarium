@@ -20,7 +20,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Catbox holds information about a harnessed catbox.
+// Catbox holds information about a harnessed terrarium.
 type Catbox struct {
 	Name      string
 	SID       string
@@ -33,19 +33,19 @@ type Catbox struct {
 	LogChan   <-chan string
 }
 
-const catboxDir = ".."
+const terrariumDir = ".."
 
 func harnessCatbox(
 	name,
 	sid string,
 ) (*Catbox, error) {
 	if err := buildCatbox(); err != nil {
-		return nil, fmt.Errorf("error building catbox: %s", err)
+		return nil, fmt.Errorf("error building terrarium: %s", err)
 	}
 
-	catbox, err := startCatbox(name, sid)
+	terrarium, err := startCatbox(name, sid)
 	if err != nil {
-		return nil, fmt.Errorf("error starting catbox: %s", err)
+		return nil, fmt.Errorf("error starting terrarium: %s", err)
 	}
 
 	var wg sync.WaitGroup
@@ -53,34 +53,34 @@ func harnessCatbox(
 	logChan := make(chan string, 1024)
 
 	wg.Add(1)
-	go logReader(&wg, fmt.Sprintf("%s stderr", name), catbox.Stderr, logChan)
+	go logReader(&wg, fmt.Sprintf("%s stderr", name), terrarium.Stderr, logChan)
 
 	wg.Add(1)
-	go logReader(&wg, fmt.Sprintf("%s stdout", name), catbox.Stdout, logChan)
+	go logReader(&wg, fmt.Sprintf("%s stdout", name), terrarium.Stdout, logChan)
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		if err := catbox.Command.Wait(); err != nil {
-			log.Printf("catbox exited: %s", err)
+		if err := terrarium.Command.Wait(); err != nil {
+			log.Printf("terrarium exited: %s", err)
 		}
 	}()
 
-	catbox.WaitGroup = &wg
-	catbox.LogChan = logChan
+	terrarium.WaitGroup = &wg
+	terrarium.LogChan = logChan
 
-	// It is important to wait for catbox to fully start. If we don't, then
+	// It is important to wait for terrarium to fully start. If we don't, then
 	// certain things we do in tests will not work well. For example, trying to
 	// reload the conf by sending a SIGHUP will kill the process.
 	startedRE := regexp.MustCompile(
-		`^\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2} catbox started$`)
+		`^\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2} terrarium started$`)
 
 	if !waitForLog(logChan, startedRE) {
-		catbox.stop()
-		return nil, fmt.Errorf("error waiting for catbox to start")
+		terrarium.stop()
+		return nil, fmt.Errorf("error waiting for terrarium to start")
 	}
 
-	return catbox, nil
+	return terrarium, nil
 }
 
 var builtCatbox bool
@@ -91,12 +91,12 @@ func buildCatbox() error {
 	}
 
 	cmd := exec.Command("go", "build")
-	cmd.Dir = catboxDir
+	cmd.Dir = terrariumDir
 
 	log.Printf("Running %s in [%s]...", cmd.Args, cmd.Dir)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("error building catbox: %s: %s", err, output)
+		return fmt.Errorf("error building terrarium: %s: %s", err, output)
 	}
 
 	builtCatbox = true
@@ -112,7 +112,7 @@ func startCatbox(
 		return nil, fmt.Errorf("error retrieving a temporary directory: %s", err)
 	}
 
-	catboxConf := filepath.Join(tmpDir, "catbox.conf")
+	terrariumConf := filepath.Join(tmpDir, "terrarium.conf")
 
 	listener, port, err := getRandomPort()
 	if err != nil {
@@ -120,15 +120,15 @@ func startCatbox(
 		return nil, fmt.Errorf("error opening random port: %s", err)
 	}
 
-	catbox, err := runCatbox(catboxConf, listener, port, name, sid)
+	terrarium, err := runCatbox(terrariumConf, listener, port, name, sid)
 	if err != nil {
 		_ = os.RemoveAll(tmpDir)
 		_ = listener.Close()
-		return nil, fmt.Errorf("error running catbox: %s", err)
+		return nil, fmt.Errorf("error running terrarium: %s", err)
 	}
 
-	catbox.ConfigDir = tmpDir
-	return catbox, nil
+	terrarium.ConfigDir = tmpDir
+	return terrarium, nil
 }
 
 func getRandomPort() (net.Listener, uint16, error) {
@@ -161,12 +161,12 @@ func runCatbox(
 		return nil, err
 	}
 
-	cmd := exec.Command("./catbox",
+	cmd := exec.Command("./terrarium",
 		"-conf", conf,
 		"-listen-fd", "3",
 	)
 
-	cmd.Dir = catboxDir
+	cmd.Dir = terrariumDir
 
 	f, err := ln.(*net.TCPListener).File()
 	if err != nil {
@@ -257,7 +257,7 @@ func logReader(
 
 func (c *Catbox) stop() {
 	if err := c.Command.Process.Kill(); err != nil {
-		log.Printf("error killing catbox: %s", err)
+		log.Printf("error killing terrarium: %s", err)
 	}
 	c.WaitGroup.Wait()
 
@@ -267,7 +267,7 @@ func (c *Catbox) stop() {
 }
 
 func (c *Catbox) linkServer(other *Catbox) error {
-	conf := filepath.Join(c.ConfigDir, "catbox.conf")
+	conf := filepath.Join(c.ConfigDir, "terrarium.conf")
 	serversConf := filepath.Join(c.ConfigDir, "servers.conf")
 	extra := fmt.Sprintf("servers-config = %s", serversConf)
 

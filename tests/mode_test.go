@@ -15,18 +15,18 @@ import (
 // Also test that the TS gets propagated between servers and a client on
 // another server gets the same TS
 func TestMODETS(t *testing.T) {
-	catbox1, err := harnessCatbox("irc1.example.org", "001")
-	require.NoError(t, err, "harness catbox")
-	defer catbox1.stop()
+	terrarium1, err := harnessCatbox("irc1.example.org", "001")
+	require.NoError(t, err, "harness terrarium")
+	defer terrarium1.stop()
 
-	catbox2, err := harnessCatbox("irc2.example.org", "002")
-	require.NoError(t, err, "harness catbox")
-	defer catbox2.stop()
+	terrarium2, err := harnessCatbox("irc2.example.org", "002")
+	require.NoError(t, err, "harness terrarium")
+	defer terrarium2.stop()
 
-	err = catbox1.linkServer(catbox2)
-	require.NoError(t, err, "link catbox1 to catbox2")
-	err = catbox2.linkServer(catbox1)
-	require.NoError(t, err, "link catbox2 to catbox1")
+	err = terrarium1.linkServer(terrarium2)
+	require.NoError(t, err, "link terrarium1 to terrarium2")
+	err = terrarium2.linkServer(terrarium1)
+	require.NoError(t, err, "link terrarium2 to terrarium1")
 
 	// Wait until we link.
 	//
@@ -37,18 +37,18 @@ func TestMODETS(t *testing.T) {
 	linkRE := regexp.MustCompile(`Established link to irc2\.`)
 	var attempts int
 	for {
-		if waitForLog(catbox1.LogChan, linkRE) {
+		if waitForLog(terrarium1.LogChan, linkRE) {
 			break
 		}
 		attempts++
 		if attempts >= 5 {
 			require.Fail(t, "failed to link")
 		}
-		require.NoError(t, err, catbox1.rehash(), "rehash catbox1")
-		require.NoError(t, err, catbox2.rehash(), "rehash catbox2")
+		require.NoError(t, err, terrarium1.rehash(), "rehash terrarium1")
+		require.NoError(t, err, terrarium2.rehash(), "rehash terrarium2")
 	}
 
-	client1 := NewClient("client1", "127.0.0.1", catbox1.Port)
+	client1 := NewClient("client1", "127.0.0.1", terrarium1.Port)
 	recvChan1, sendChan1, _, err := client1.Start()
 	require.NoError(t, err, "start client")
 	defer client1.Stop()
@@ -110,7 +110,7 @@ func TestMODETS(t *testing.T) {
 		t,
 		creationTimeMessage,
 		&irc.Message{
-			Prefix:  catbox1.Name,
+			Prefix:  terrarium1.Name,
 			Command: "329",
 			Params:  []string{client1.GetNick(), "#test", creationTimeString},
 		},
@@ -124,7 +124,7 @@ func TestMODETS(t *testing.T) {
 
 	// Try a client on the other server and ensure they get the same time.
 
-	client2 := NewClient("client2", "127.0.0.1", catbox2.Port)
+	client2 := NewClient("client2", "127.0.0.1", terrarium2.Port)
 	recvChan2, sendChan2, _, err := client2.Start()
 	require.NoError(t, err, "start client 2")
 	defer client2.Stop()
@@ -178,7 +178,7 @@ func TestMODETS(t *testing.T) {
 		t,
 		creationTimeMessage2,
 		&irc.Message{
-			Prefix:  catbox2.Name,
+			Prefix:  terrarium2.Name,
 			Command: "329",
 			Params:  []string{client2.GetNick(), "#test", creationTimeString},
 		},
