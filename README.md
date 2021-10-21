@@ -5,8 +5,13 @@ Status](https://travis-ci.org/eyedeekay/terrarium.svg)](https://travis-ci.org/ey
 [![Go Report
 Card](https://goreportcard.com/badge/i2pgit.org/idk/terrarium)](https://goreportcard.com/report/i2pgit.org/idk/terrarium)
 
-terrarium is an IRC server with a focus on being small and understandable. The
-goal is security.
+terrarium is an IRC server with a focus on being small and understandable,
+originally forked from [horgh/catbox](https://github.com/horgh/catbox). The
+goal is to create an easy-to-configure I2P IRC server which is highly stable
+and secure, while retaining the ability to link with non-I2P IRC servers using
+TLS in order to bridge anonymous and non-anonymous chat. For now, Bridged
+servers are not anonymous, this may change in the future as I evaluate the
+feasibility of outproxies or Tor.
 
 
 # Features
@@ -18,17 +23,19 @@ goal is security.
 * TLS
 
 terrarium implements enough of [RFC 1459](https://tools.ietf.org/html/rfc1459)
-to be recognisable as IRC and be minimally functional. I likely won't add
-much more and don't intend it to be complete. If I don't think something is
-required it likely won't be here.
+to be recognisable as IRC and be minimally functional. It will intentionally
+omit unnecessary features. Priority features are those which enable moderation
+and provide more flexible security.
 
 
 # Installation
-1. Download terrarium from the Releases tab on GitHub, or build from source
+1. Clone the software from [i2pgit.org](https://i2pgit.org/idk/terrarium)
+   (`git clone https://i2pgit.org/idk/terrarium go/src/i2pgit.org/idk/terrarium && cd go/src/i2pgit.org/idk/terrarium`).
+2. Build from source
    (`go build`).
-2. Configure terrarium through config files. There are example configs in the
+3. Configure terrarium through config files. There are example configs in the
    `conf` directory. All settings are optional and have defaults.
-3. Run it, e.g. `./terrarium -conf terrarium.conf`. You might run it via systemd
+4. Run it, e.g. `./terrarium -conf terrarium.conf`. You might run it via systemd
    via a service such as:
 
 ```
@@ -73,9 +80,18 @@ Clients connect to the network hostname and verify against it. Servers
 connect to each other by server hostname and verify against it.
 
 
+## I2P
+An example I2P configuration can be found in:
+
+`conf/catbox-i2p.conf`
+
+That's all the docs I have for now
+
 # Why the name?
-My domain name is summercat.com, cats love boxes, and a tribute to
-ircd-ratbox, the IRC daemon I used in the past.
+It was forked from an IRC server called catbox which had a focus on simplicity
+and understandability. It now has the ability to connect to other IRC servers
+through I2P Tunnels. Clearnet is to I2P Tunnels is sort of like Catbox is to
+Terrarium.
 
 
 # Logo
