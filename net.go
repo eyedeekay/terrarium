@@ -1,4 +1,4 @@
-package catbox
+package terrarium
 
 import (
 	"bufio"

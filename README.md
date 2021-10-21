@@ -1,11 +1,11 @@
-![catbox](doc/catbox-with-text.png)
+![terrarium](doc/terrarium-with-text.png)
 
 [![Build
-Status](https://travis-ci.org/horgh/catbox.svg)](https://travis-ci.org/horgh/catbox)
+Status](https://travis-ci.org/eyedeekay/terrarium.svg)](https://travis-ci.org/eyedeekay/terrarium)
 [![Go Report
-Card](https://goreportcard.com/badge/github.com/horgh/catbox)](https://goreportcard.com/report/github.com/horgh/catbox)
+Card](https://goreportcard.com/badge/i2pgit.org/idk/terrarium)](https://goreportcard.com/report/i2pgit.org/idk/terrarium)
 
-catbox is an IRC server with a focus on being small and understandable. The
+terrarium is an IRC server with a focus on being small and understandable. The
 goal is security.
 
 
@@ -17,23 +17,23 @@ goal is security.
 * K: line style connection banning
 * TLS
 
-catbox implements enough of [RFC 1459](https://tools.ietf.org/html/rfc1459)
+terrarium implements enough of [RFC 1459](https://tools.ietf.org/html/rfc1459)
 to be recognisable as IRC and be minimally functional. I likely won't add
 much more and don't intend it to be complete. If I don't think something is
 required it likely won't be here.
 
 
 # Installation
-1. Download catbox from the Releases tab on GitHub, or build from source
+1. Download terrarium from the Releases tab on GitHub, or build from source
    (`go build`).
-2. Configure catbox through config files. There are example configs in the
+2. Configure terrarium through config files. There are example configs in the
    `conf` directory. All settings are optional and have defaults.
-3. Run it, e.g. `./catbox -conf catbox.conf`. You might run it via systemd
+3. Run it, e.g. `./terrarium -conf terrarium.conf`. You might run it via systemd
    via a service such as:
 
 ```
 [Service]
-ExecStart=/home/ircd/catbox/catbox -conf /home/ircd/catbox/catbox.conf
+ExecStart=/home/ircd/terrarium/terrarium -conf /home/ircd/terrarium/terrarium.conf
 Restart=always
 
 [Install]
@@ -43,7 +43,7 @@ WantedBy=default.target
 
 # Configuration
 
-## catbox.conf
+## terrarium.conf
 Global server settings.
 
 
@@ -79,4 +79,4 @@ ircd-ratbox, the IRC daemon I used in the past.
 
 
 # Logo
-catbox logo (c) 2017 Bee
+terrarium logo (c) 2017 Bee

@@ -1,4 +1,4 @@
-package catbox
+package terrarium
 
 import (
 	"fmt"
@@ -139,7 +139,7 @@ func checkAndParseConfig(file string) (*Config, error) {
 		c.ServerInfo = m["server-info"]
 	}
 
-	c.MOTD = "Hello this is catbox"
+	c.MOTD = "Hello this is terrarium"
 	if m["motd"] != "" {
 		c.MOTD = m["motd"]
 	}
