@@ -17,10 +17,8 @@ import (
 
 	"github.com/horgh/irc"
 	"github.com/pkg/errors"
-)
 
-import (
-	"github.com/eyedeekay/sam3/helper"
+	sam "github.com/eyedeekay/sam3/helper"
 )
 
 // Catbox holds the state for this local server.
@@ -388,7 +386,7 @@ func (cb *Catbox) Start(listenFD int) error {
 	// Catch SIGUSR1 and restart.
 	signalChan := make(chan os.Signal)
 	signal.Notify(signalChan, syscall.SIGHUP)
-	signal.Notify(signalChan, syscall.SIGUSR1)
+	signal.Notify(signalChan, syscall.SIGINT)
 
 	cb.WG.Add(1)
 	go func() {
@@ -401,7 +399,7 @@ func (cb *Catbox) Start(listenFD int) error {
 					cb.newEvent(Event{Type: RehashEvent})
 					break
 				}
-				if sig == syscall.SIGUSR1 {
+				if sig == syscall.SIGINT {
 					log.Printf("Received SIGUSR1 signal, restarting")
 					cb.newEvent(Event{Type: RestartEvent})
 					break

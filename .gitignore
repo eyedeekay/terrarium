@@ -1,3 +1,6 @@
 *.swp
 /catbox
 /test-net
+*.crt
+*.crl
+*.pem
