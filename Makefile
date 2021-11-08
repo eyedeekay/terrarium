@@ -15,7 +15,7 @@ plugin-linux: linux
 		-clientname=terrarium \
 		-consolename="terrarium IRC" \
 		-consoleurl="http://127.0.0.1:8084" \
-		-name="terrariumIRC" \
+		-name="terrarium" \
 		-delaystart="1" \
 		-desc="`cat desc`" \
 		-exename=terrarium \
@@ -23,8 +23,8 @@ plugin-linux: linux
 		-command="terrarium -conf \"\$$PLUGIN/lib/catbox-i2p.conf\"" \
 		-license=MIT \
 		-res=conf
-	cp -v terrariumIRC.su3 ../terrarium-linux.su3
-	unzip -o terrariumIRC.zip -d terrarium-zip
+	cp -v terrarium.su3 ../terrarium-linux.su3
+	unzip -o terrarium.zip -d terrarium-zip
 
 plugin-windows: windows
 	i2p.plugin.native -name=terrarium \
@@ -35,7 +35,7 @@ plugin-windows: windows
 		-clientname=terrarium.exe \
 		-consolename="terrarium IRC" \
 		-consoleurl="http://127.0.0.1:8084" \
-		-name="terrariumIRC" \
+		-name="terrarium" \
 		-delaystart="1" \
 		-desc="`cat desc`" \
 		-exename=terrarium.exe \
@@ -44,5 +44,5 @@ plugin-windows: windows
 		-license=MIT \
 		-targetos="windows" \
 		-res=conf
-	cp -v terrariumIRC.su3 ../terrarium-windows.su3
-	unzip -o terrariumIRC.zip -d terrarium-zip-win
+	cp -v terrarium.su3 ../terrarium-windows.su3
+	unzip -o terrarium.zip -d terrarium-zip-win
