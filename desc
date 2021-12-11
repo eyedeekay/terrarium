@@ -1,0 +1,5 @@
+terrarium is an IRC server with a focus on being small and understandable,
+originally forked from [horgh/catbox](https://github.com/horgh/catbox). The
+goal is to create an easy-to-configure I2P IRC server which is highly stable
+and secure, while retaining the ability to link with non-I2P IRC servers using
+TLS in order to bridge anonymous and non-anonymous chat.

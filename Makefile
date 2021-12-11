@@ -16,7 +16,7 @@ build: dep
 	make su3
 
 clean:
-	rm -f $(BINARY)-plugin plugin $(BINARY)-zip* -r
+	rm -f $(BINARY)-plugin plugin $(BINARY)-*zip -r
 	rm -f *.su3 *.zip $(BINARY)-$(GOOS)-$(GOARCH) $(BINARY)-*
 
 all: windows linux osx bsd
