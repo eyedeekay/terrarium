@@ -10,6 +10,7 @@ ARG=-v -tags netgo -ldflags '-w -extldflags "-static"'
 BINARY=terrarium
 SIGNER=hankhill19580@gmail.com
 CONSOLEPOSTNAME=IRC
+USER_GH=eyedeekay
 
 build: dep
 	go build $(ARG) -tags="netgo" -o $(BINARY)-$(GOOS)-$(GOARCH) ./cmd/$(BINARY)
@@ -64,10 +65,10 @@ sum:
 	sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3
 
 version:
-	@echo gothub release -u eyedeekay -r terrarium -t "$(VERSION)" -d "`cat desc`"; true
+	gothub release -u eyedeekay -r terrarium -t "$(VERSION)" -d "`cat desc`"; true
 
 upload:
-	@echo gothub upload -u eyedeekay -r terrarium -t "$(VERSION)" -f $(BINARY)-$(GOOS)-$(GOARCH).su3 -n $(BINARY)-$(GOOS)-$(GOARCH).su3 -l "`sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3`"
+	gothub upload -u eyedeekay -r terrarium -t "$(VERSION)" -f $(BINARY)-$(GOOS)-$(GOARCH).su3 -n $(BINARY)-$(GOOS)-$(GOARCH).su3 -l "`sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3`"
 
 upload-windows:
 	GOOS=windows GOARCH=amd64 make upload
@@ -90,10 +91,17 @@ upload-all: upload-windows upload-linux upload-osx upload-bsd
 
 download-su3s:
 	GOOS=windows GOARCH=amd64 make download-single-su3
+	GOOS=windows GOARCH=386 make download-single-su3
 	GOOS=linux GOARCH=amd64 make download-single-su3
+	GOOS=linux GOARCH=arm64 make download-single-su3
+	GOOS=linux GOARCH=386 make download-single-su3
+	GOOS=darwin GOARCH=amd64 make download-single-su3
+	GOOS=darwin GOARCH=arm64 make download-single-su3
+	GOOS=freebsd GOARCH=amd64 make download-single-su3
+	GOOS=openbsd GOARCH=amd64 make download-single-su3
 
 download-single-su3:
-	wget -N -c "https://github.com/$(USER_GH)/$(REPO_NAME)/releases/download/$(VERSION)/$(BINARY)-$(GOOS).su3"
+	wget -N -c "https://github.com/$(USER_GH)/$(BINARY)/releases/download/$(VERSION)/$(BINARY)-$(GOOS)-$(GOARCH).su3"
 
 release: clean all version upload-all
 
