@@ -88,4 +88,4 @@ upload-bsd:
 
 upload-all: upload-windows upload-linux upload-osx upload-bsd
 
-release: version upload-all
+release: clean all version upload-all
