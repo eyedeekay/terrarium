@@ -8,7 +8,7 @@ GOARCH?="amd64"
 ARG=-v -tags netgo -ldflags '-w -extldflags "-static"'
 
 BINARY=terrarium
-SIGNER=hankhill1958@gmail.com
+SIGNER=hankhill19580@gmail.com
 CONSOLEPOSTNAME=IRC
 
 build: dep
@@ -55,10 +55,10 @@ su3:
 		-desc="`cat desc`" \
 		-exename=$(BINARY)-$(GOOS)-$(GOARCH) \
 		-icondata=icon/icon.png \
-		-command="$(BINARY)-$(GOOS)-$(GOARCH) -conf \"\$$PLUGIN/lib/catbox-i2p.conf\"" \
+		-command="$(BINARY)-$(GOOS)-$(GOARCH) -conf \"\$$PLUGIN/catbox-i2p.conf\"" \
 		-license=MIT \
 		-res=conf/
-	unzip -o $(BINARY).zip -d $(BINARY)-zip
+	unzip -o $(BINARY)-$(GOOS)-$(GOARCH).zip -d $(BINARY)-$(GOOS)-$(GOARCH)-zip
 
 sum:
 	sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3
