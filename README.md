@@ -27,6 +27,19 @@ to be recognisable as IRC and be minimally functional. It will intentionally
 omit unnecessary features. Priority features are those which enable moderation
 and provide more flexible security.
 
+# Plugin Installation URL's
+
+[A guide to installing I2P plugins can be found on the I2P web site.](https://geti2p.net/en/docs/plugins)
+
+### Inside I2P
+
+ - [Windows (In-I2P)](http://idk.i2p/terrarium/snowflake-windows.su3)
+ - [Linux (In-I2P)](http://idk.i2p/terrarium/snowflake-linux.su3)
+
+### Outside I2P
+
+ - [Windows](https://github.com/terrarium/blizzard/releases)
+ - [Linux](https://github.com/terrarium/blizzard/releases)
 
 # Installation
 1. Clone the software from [i2pgit.org](https://i2pgit.org/idk/terrarium)

@@ -88,4 +88,23 @@ upload-bsd:
 
 upload-all: upload-windows upload-linux upload-osx upload-bsd
 
+download-su3s:
+	GOOS=windows GOARCH=amd64 make download-single-su3
+	GOOS=linux GOARCH=amd64 make download-single-su3
+
+download-single-su3:
+	wget -N -c "https://github.com/$(USER_GH)/$(REPO_NAME)/releases/download/$(VERSION)/$(BINARY)-$(GOOS).su3"
+
 release: clean all version upload-all
+
+index:
+	@echo "<!DOCTYPE html>" > index.html
+	@echo "<html>" >> index.html
+	@echo "<head>" >> index.html
+	@echo "  <title>$(BINARY) - $(CONSOLEPOSTNAME)</title>" >> index.html
+	@echo "  <link rel=\"stylesheet\" type=\"text/css\" href =\"/style.css\" />" >> index.html
+	@echo "</head>" >> index.html
+	@echo "<body>" >> index.html
+	pandoc README.md >> index.html
+	@echo "</body>" >> index.html
+	@echo "</html>" >> index.html
