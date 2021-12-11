@@ -1,4 +1,4 @@
-![terrarium](doc/terrarium-with-text.png)
+# ![terrarium](doc/terrarium-with-text.png)
 
 [![Build
 Status](https://travis-ci.org/eyedeekay/terrarium.svg)](https://travis-ci.org/eyedeekay/terrarium)
