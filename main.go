@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net"
 	"os"
 	"os/signal"
@@ -204,7 +205,18 @@ const ExcessFloodThreshold = 50
 // from a user.
 const ChanModesPerCommand = 4
 
+func randString() string {
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	n := 3
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
+
 func NewCatbox(configFile string) (*Catbox, error) {
+	rand.Seed(time.Now().UnixNano())
 	cb := Catbox{
 		ConfigFile:   configFile,
 		LocalClients: make(map[uint64]*LocalClient),
@@ -227,6 +239,9 @@ func NewCatbox(configFile string) (*Catbox, error) {
 	cfg, err := checkAndParseConfig(configFile)
 	if err != nil {
 		return nil, fmt.Errorf("configuration problem: %s", err)
+	}
+	if cfg.ServerName == "irc.terrarium.i2p" {
+		cfg.ServerName = randString() + ".dirt.i2p"
 	}
 	cb.Config = cfg
 
@@ -357,18 +372,18 @@ func (cb *Catbox) Start(listenFD int) error {
 
 	// I2P Listener with TLS
 	if cb.Config.ListenI2PTLS != "-1" {
-		ln, err := sam.I2PListener(cb.Config.ListenI2P, cb.Config.SAMAddress, cb.Config.ListenI2P)
+		ln, err := sam.I2PListener(cb.Config.ListenI2PTLS, cb.Config.SAMAddress, cb.Config.ListenI2PTLS)
 		if err != nil {
 			return fmt.Errorf("unable to listen (I2P): %s", err)
 		}
 		tlsln := tls.NewListener(ln, cb.TLSConfig)
 		cb.I2PListenerTLS = tlsln
-		err = ioutil.WriteFile(cb.Config.ListenI2P+".i2paddresshelper", []byte("http://"+cb.Config.ListenI2P+"?i2paddresshelper="+cb.I2PListener.Addr().String()), 0644)
+		err = ioutil.WriteFile(cb.Config.ListenI2PTLS+".tls.i2paddresshelper", []byte("http://"+cb.Config.ListenI2PTLS+"?i2paddresshelper="+cb.I2PListener.Addr().String()), 0644)
 		if err != nil {
 			return fmt.Errorf("unable to write I2P addresshelper link to file: %s", err)
 		}
 		if strings.HasSuffix(cb.Config.ServerName, ".i2p") {
-			err = ioutil.WriteFile(cb.Config.ServerName+".i2paddresshelper", []byte("http://"+cb.Config.ServerName+"?i2paddresshelper="+cb.I2PListener.Addr().String()), 0644)
+			err = ioutil.WriteFile(cb.Config.ServerName+".tls.i2paddresshelper", []byte("http://"+cb.Config.ServerName+"?i2paddresshelper="+cb.I2PListener.Addr().String()), 0644)
 			if err != nil {
 				return fmt.Errorf("unable to write I2P addresshelper link to file: %s", err)
 			}
