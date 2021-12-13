@@ -1,4 +1,4 @@
-VERSION=0.0.04
+VERSION=0.0.05
 CGO_ENABLED=0
 export CGO_ENABLED=0
 
@@ -56,7 +56,7 @@ su3:
 		-desc="`cat desc`" \
 		-exename=$(BINARY)-$(GOOS)-$(GOARCH) \
 		-icondata=icon/icon.png \
-		-updateurl="http://idk.i2p/terrarium/reseed-tools-$(GOOS)-$(GOARCH).su3" \
+		-updateurl="http://idk.i2p/terrarium/$(BINARY)-$(GOOS)-$(GOARCH).su3" \
 		-website="http://idk.i2p/terrarium/" \
 		-command="$(BINARY)-$(GOOS)-$(GOARCH) -conf \"\$$PLUGIN/catbox-i2p.conf\"" \
 		-license=MIT \
