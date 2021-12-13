@@ -33,8 +33,8 @@ and provide more flexible security.
 
 ### Inside I2P
 
- - [Windows (In-I2P)](http://idk.i2p/terrarium/snowflake-windows.su3)
- - [Linux (In-I2P)](http://idk.i2p/terrarium/snowflake-linux.su3)
+ - [Windows (In-I2P)](http://idk.i2p/terrarium/terrarium-windows.su3)
+ - [Linux (In-I2P)](http://idk.i2p/terrarium/terrarium-linux.su3)
 
 ### Outside I2P
 
