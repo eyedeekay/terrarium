@@ -50,7 +50,6 @@ su3:
 		-autostart=true \
 		-clientname=$(BINARY)-$(GOOS)-$(GOARCH) \
 		-consolename="$(BINARY) - $(CONSOLEPOSTNAME)" \
-		-consoleurl="http://127.0.0.1:8084" \
 		-name="$(BINARY)-$(GOOS)-$(GOARCH)" \
 		-delaystart="1" \
 		-desc="`cat desc`" \
