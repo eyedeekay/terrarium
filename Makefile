@@ -1,4 +1,4 @@
-VERSION=0.0.06
+VERSION=0.0.07
 CGO_ENABLED=0
 export CGO_ENABLED=0
 
@@ -69,7 +69,7 @@ version:
 	gothub release -u eyedeekay -r terrarium -t "$(VERSION)" -d "`cat desc`"; true
 
 upload:
-	gothub upload -u eyedeekay -r terrarium -t "$(VERSION)" -f $(BINARY)-$(GOOS)-$(GOARCH).su3 -n $(BINARY)-$(GOOS)-$(GOARCH).su3 -l "`sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3`"
+	gothub upload -R -u eyedeekay -r terrarium -t "$(VERSION)" -f $(BINARY)-$(GOOS)-$(GOARCH).su3 -n $(BINARY)-$(GOOS)-$(GOARCH).su3 -l "`sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3`"
 
 upload-windows:
 	GOOS=windows GOARCH=amd64 make upload
