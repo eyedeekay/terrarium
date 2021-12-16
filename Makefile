@@ -58,7 +58,7 @@ su3:
 		-updateurl="http://idk.i2p/terrarium/$(BINARY)-$(GOOS)-$(GOARCH).su3" \
 		-website="http://idk.i2p/terrarium/" \
 		-command="$(BINARY)-$(GOOS)-$(GOARCH) -conf \"\$$PLUGIN/catbox-i2p.conf\"" \
-		-license=MIT \
+		-license=AGPL \
 		-res=conf/
 	unzip -o $(BINARY)-$(GOOS)-$(GOARCH).zip -d $(BINARY)-$(GOOS)-$(GOARCH)-zip
 
