@@ -1,3 +1,8 @@
+# 0.0.08
+
+- include license in plugin package
+- fix license in plugin config
+
 # 0.0.07
 
 - restart changelog.
