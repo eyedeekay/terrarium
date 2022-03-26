@@ -40,7 +40,7 @@ bsd:
 	GOOS=openbsd GOARCH=amd64 make build su3
 
 dep:
-	cp "$(HOME)/Workspace/GIT_WORK/i2p.i2p/build/shellservice.jar" conf/lib/shellservice.jar -v
+#	cp "$(HOME)/build/shellservice.jar" conf/lib/shellservice.jar -v
 
 su3:
 	i2p.plugin.native -name=$(BINARY)-$(GOOS)-$(GOARCH) \
@@ -55,8 +55,8 @@ su3:
 		-desc="`cat desc`" \
 		-exename=$(BINARY)-$(GOOS)-$(GOARCH) \
 		-icondata=icon/icon.png \
-		-updateurl="http://idk.i2p/terrarium/$(BINARY)-$(GOOS)-$(GOARCH).su3" \
-		-website="http://idk.i2p/terrarium/" \
+		-updateurl="http://idk.i2p/$(BINARY)/$(BINARY)-$(GOOS)-$(GOARCH).su3" \
+		-website="http://idk.i2p/$(BINARY)/" \
 		-command="$(BINARY)-$(GOOS)-$(GOARCH) -conf \"\$$PLUGIN/catbox-i2p.conf\"" \
 		-license=AGPL \
 		-res=conf/
@@ -66,10 +66,10 @@ sum:
 	sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3
 
 version:
-	gothub release -u eyedeekay -r terrarium -t "$(VERSION)" -d "`cat desc`"; true
+	gothub release -u eyedeekay -r $(BINARY) -t "$(VERSION)" -d "`cat desc`"; true
 
 upload:
-	gothub upload -R -u eyedeekay -r terrarium -t "$(VERSION)" -f $(BINARY)-$(GOOS)-$(GOARCH).su3 -n $(BINARY)-$(GOOS)-$(GOARCH).su3 -l "`sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3`"
+	gothub upload -R -u eyedeekay -r $(BINARY) -t "$(VERSION)" -f $(BINARY)-$(GOOS)-$(GOARCH).su3 -n $(BINARY)-$(GOOS)-$(GOARCH).su3 -l "`sha256sum $(BINARY)-$(GOOS)-$(GOARCH).su3`"
 
 upload-windows:
 	GOOS=windows GOARCH=amd64 make upload
