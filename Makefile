@@ -102,7 +102,7 @@ download-su3s:
 	GOOS=openbsd GOARCH=amd64 make download-single-su3
 
 download-single-su3:
-	wget -N -c "https://github.com/$(USER_GH)/$(BINARY)/releases/download/$(VERSION)/$(BINARY)-$(GOOS)-$(GOARCH).su3"
+	wget-ds "https://github.com/$(USER_GH)/$(BINARY)/releases/download/$(VERSION)/$(BINARY)-$(GOOS)-$(GOARCH).su3"
 
 release: clean all version upload-all
 
