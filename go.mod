@@ -1,15 +1,19 @@
 module i2pgit.org/idk/terrarium
 
+go 1.18
+
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/eyedeekay/sam3 v0.32.32
-	github.com/horgh/config v0.0.0-20190101204049-770bc48a3bdf
-	github.com/horgh/irc v0.0.0-20190101204118-d089b0b5b5c5
-	github.com/kr/pretty v0.1.0 // indirect
-	github.com/pkg/errors v0.8.1
-	github.com/stretchr/testify v1.4.0
-	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
-	gopkg.in/yaml.v2 v2.2.4 // indirect
+	github.com/eyedeekay/sam3 v0.33.2
+	github.com/horgh/config v0.0.0-20180303191532-3d1f920eb228
+	github.com/horgh/irc v0.0.0-20180101050313-f421bdb90dcc
+	github.com/pkg/errors v0.8.0
+	github.com/stretchr/testify v1.7.1
 )
 
-go 1.13
+require (
+	github.com/davecgh/go-spew v1.1.0 // indirect
+	github.com/eyedeekay/i2pkeys v0.0.0-20220310052025-204d4ae6dcae // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
+)
