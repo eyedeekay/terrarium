@@ -1,73 +1,264 @@
-<!DOCTYPE html>
 <html>
-<head>
-  <title>terrarium - IRC</title>
-  <link rel="stylesheet" type="text/css" href ="/style.css" />
-</head>
-<body>
-<h1 id="terrarium"><img src="doc/terrarium-with-text.png" alt="terrarium" /></h1>
-<p><a href="https://travis-ci.org/eyedeekay/terrarium"><img src="https://travis-ci.org/eyedeekay/terrarium.svg" alt="Build Status" /></a> <a href="https://goreportcard.com/report/i2pgit.org/idk/terrarium"><img src="https://goreportcard.com/badge/i2pgit.org/idk/terrarium" alt="Go Report Card" /></a></p>
-<p>terrarium is an IRC server with a focus on being small and understandable, originally forked from <a href="https://github.com/horgh/catbox">horgh/catbox</a>. The goal is to create an easy-to-configure I2P IRC server which is highly stable and secure, while retaining the ability to link with non-I2P IRC servers using TLS in order to bridge anonymous and non-anonymous chat. For now, Bridged servers are not anonymous, this may change in the future as I evaluate the feasibility of outproxies or Tor.</p>
-<h1 id="features">Features</h1>
-<ul>
-<li>Server to server linking</li>
-<li>IRC operators</li>
-<li>Private (WHOIS shows no channels, LIST isn’t supported)</li>
-<li>Flood protection</li>
-<li>K: line style connection banning</li>
-<li>TLS</li>
-</ul>
-<p>terrarium implements enough of <a href="https://tools.ietf.org/html/rfc1459">RFC 1459</a> to be recognisable as IRC and be minimally functional. It will intentionally omit unnecessary features. Priority features are those which enable moderation and provide more flexible security.</p>
-<h1 id="plugin-installation-urls">Plugin Installation URL’s</h1>
-<p><a href="https://geti2p.net/en/docs/plugins">A guide to installing I2P plugins can be found on the I2P web site.</a></p>
-<h3 id="inside-i2p">Inside I2P</h3>
-<ul>
-<li><a href="http://idk.i2p/terrarium/terrarium-windows-amd64.su3">Windows (In-I2P)</a></li>
-<li><a href="http://idk.i2p/terrarium/terrarium-linux-amd64.su3">Linux (In-I2P)</a></li>
-</ul>
-<h3 id="outside-i2p">Outside I2P</h3>
-<ul>
-<li><a href="https://github.com/terrarium/blizzard/releases">Windows</a></li>
-<li><a href="https://github.com/terrarium/blizzard/releases">Linux</a></li>
-</ul>
-<h1 id="installation">Installation</h1>
-<ol type="1">
-<li>Clone the software from <a href="https://i2pgit.org/idk/terrarium">i2pgit.org</a> (<code>git clone https://i2pgit.org/idk/terrarium go/src/i2pgit.org/idk/terrarium &amp;&amp; cd go/src/i2pgit.org/idk/terrarium</code>).</li>
-<li>Build from source (<code>go build</code>).</li>
-<li>Configure terrarium through config files. There are example configs in the <code>conf</code> directory. All settings are optional and have defaults.</li>
-<li>Run it, e.g. <code>./terrarium -conf terrarium.conf</code>. You might run it via systemd via a service such as:</li>
-</ol>
-<pre><code>[Service]
-ExecStart=/home/ircd/terrarium/terrarium -conf /home/ircd/terrarium/terrarium.conf
-Restart=always
-
-[Install]
-WantedBy=default.target</code></pre>
-<h1 id="configuration">Configuration</h1>
-<h2 id="terrarium.conf">terrarium.conf</h2>
-<p>Global server settings.</p>
-<h2 id="opers.conf">opers.conf</h2>
-<p>IRC operators.</p>
-<h2 id="servers.conf">servers.conf</h2>
-<p>The servers to link with.</p>
-<h2 id="users.conf">users.conf</h2>
-<p>Privileges and hostname spoofs for users.</p>
-<p>The only privilege right now is flood exemption.</p>
-<h2 id="tls">TLS</h2>
-<p>A setup for a network might look like this:</p>
-<ul>
-<li>Give each server a certificate with 2 SANs: Its own hostname, e.g. server1.example.com, and the network hostname, e.g. irc.example.com.</li>
-<li>Set up irc.example.com with DNS round-robin listing each server’s IP.</li>
-<li>List each server by its own hostname in servers.conf.</li>
-</ul>
-<p>Clients connect to the network hostname and verify against it. Servers connect to each other by server hostname and verify against it.</p>
-<h2 id="i2p">I2P</h2>
-<p>An example I2P configuration can be found in:</p>
-<p><code>conf/catbox-i2p.conf</code></p>
-<p>That’s all the docs I have for now</p>
-<h1 id="why-the-name">Why the name?</h1>
-<p>It was forked from an IRC server called catbox which had a focus on simplicity and understandability. It now has the ability to connect to other IRC servers through I2P Tunnels. Clearnet is to I2P Tunnels is sort of like Catbox is to Terrarium.</p>
-<h1 id="logo">Logo</h1>
-<p>terrarium logo (c) 2017 Bee</p>
-</body>
+  <head>
+    <title></title>
+    <meta name="author" content="eyedeekay" />
+    <meta name="description" content="terrarium.git" />
+    <meta name="keywords" content="master" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src=""></script>
+  </head>
+  <body>
+    <div id="navbar">
+      <a href="#shownav">
+        Show navigation
+      </a>
+      <div id="shownav">
+        <div id="hidenav">
+          <ul>
+            <li>
+              <a href="index.html">
+                index
+              </a>
+            </li>
+            <li>
+              <a href="CHANGELOG.html">
+                CHANGELOG
+              </a>
+            </li>
+          </ul>
+          <br>
+          <a href="#hidenav">
+            Hide Navigation
+          </a>
+        </div>
+      </div>
+    </div>
+    <a href="/"></a>
+    <h1>
+      <img src="doc/terrarium-with-text.png" alt="terrarium"/>
+    </h1>
+    <p>
+      <a href="https://travis-ci.org/eyedeekay/terrarium" rel="nofollow">
+        <img src="https://travis-ci.org/eyedeekay/terrarium.svg" alt="Build
+Status"/>
+      </a>
+      <a href="https://goreportcard.com/report/i2pgit.org/idk/terrarium" rel="nofollow">
+        <img src="https://goreportcard.com/badge/i2pgit.org/idk/terrarium" alt="Go Report
+Card"/>
+      </a>
+    </p>
+    <p>
+      terrarium is an IRC server with a focus on being small and understandable,
+      originally forked from
+      <a href="https://github.com/horgh/catbox" rel="nofollow">
+        horgh/catbox
+      </a>
+      . The
+      goal is to create an easy-to-configure I2P IRC server which is highly stable
+      and secure, while retaining the ability to link with non-I2P IRC servers using
+      TLS in order to bridge anonymous and non-anonymous chat. For now, Bridged
+      servers are not anonymous, this may change in the future as I evaluate the
+      feasibility of outproxies or Tor.
+    </p>
+    <h1>
+      Features
+    </h1>
+    <ul>
+      <li>
+        Server to server linking
+      </li>
+      <li>
+        IRC operators
+      </li>
+      <li>
+        Private (WHOIS shows no channels, LIST isn’t supported)
+      </li>
+      <li>
+        Flood protection
+      </li>
+      <li>
+        K: line style connection banning
+      </li>
+      <li>
+        TLS
+      </li>
+    </ul>
+    <p>
+      terrarium implements enough of
+      <a href="https://tools.ietf.org/html/rfc1459" rel="nofollow">
+        RFC 1459
+      </a>
+      to be recognisable as IRC and be minimally functional. It will intentionally
+      omit unnecessary features. Priority features are those which enable moderation
+      and provide more flexible security.
+    </p>
+    <h1>
+      Plugin Installation URL’s
+    </h1>
+    <p>
+      <a href="https://geti2p.net/en/docs/plugins" rel="nofollow">
+        A guide to installing I2P plugins can be found on the I2P web site.
+      </a>
+    </p>
+    <h3>
+      Inside I2P
+    </h3>
+    <ul>
+      <li>
+        <a href="http://idk.i2p/terrarium/terrarium-windows-amd64.su3" rel="nofollow">
+          Windows (In-I2P)
+        </a>
+      </li>
+      <li>
+        <a href="http://idk.i2p/terrarium/terrarium-linux-amd64.su3" rel="nofollow">
+          Linux (In-I2P)
+        </a>
+      </li>
+    </ul>
+    <h3>
+      Outside I2P
+    </h3>
+    <ul>
+      <li>
+        <a href="https://github.com/terrarium/blizzard/releases" rel="nofollow">
+          Windows
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/terrarium/blizzard/releases" rel="nofollow">
+          Linux
+        </a>
+      </li>
+    </ul>
+    <h1>
+      Installation
+    </h1>
+    <ol>
+      <li>
+        Clone the software from
+        <a href="https://i2pgit.org/idk/terrarium" rel="nofollow">
+          i2pgit.org
+        </a>
+        (
+        <code>
+          git clone https://i2pgit.org/idk/terrarium go/src/i2pgit.org/idk/terrarium &amp;&amp; cd go/src/i2pgit.org/idk/terrarium
+        </code>
+        ).
+      </li>
+      <li>
+        Build from source
+        (
+        <code>
+          go build
+        </code>
+        ).
+      </li>
+      <li>
+        Configure terrarium through config files. There are example configs in the
+        <code>
+          conf
+        </code>
+        directory. All settings are optional and have defaults.
+      </li>
+      <li>
+        Run it, e.g.
+        <code>
+          ./terrarium -conf terrarium.conf
+        </code>
+        . You might run it via systemd
+        via a service such as:
+        <code>
+          [Service]
+          ExecStart=/home/ircd/terrarium/terrarium -conf /home/ircd/terrarium/terrarium.conf
+          Restart=always
+          [Install]
+          WantedBy=default.target
+        </code>
+      </li>
+    </ol>
+    <h1>
+      Configuration
+    </h1>
+    <h2>
+      terrarium.conf
+    </h2>
+    <p>
+      Global server settings.
+    </p>
+    <h2>
+      opers.conf
+    </h2>
+    <p>
+      IRC operators.
+    </p>
+    <h2>
+      servers.conf
+    </h2>
+    <p>
+      The servers to link with.
+    </p>
+    <h2>
+      users.conf
+    </h2>
+    <p>
+      Privileges and hostname spoofs for users.
+    </p>
+    <p>
+      The only privilege right now is flood exemption.
+    </p>
+    <h2>
+      TLS
+    </h2>
+    <p>
+      A setup for a network might look like this:
+    </p>
+    <ul>
+      <li>
+        Give each server a certificate with 2 SANs: Its own hostname, e.g.
+        server1.example.com, and the network hostname, e.g. irc.example.com.
+      </li>
+      <li>
+        Set up irc.example.com with DNS round-robin listing each server’s IP.
+      </li>
+      <li>
+        List each server by its own hostname in servers.conf.
+      </li>
+    </ul>
+    <p>
+      Clients connect to the network hostname and verify against it. Servers
+      connect to each other by server hostname and verify against it.
+    </p>
+    <h2>
+      I2P
+    </h2>
+    <p>
+      An example I2P configuration can be found in:
+    </p>
+    <p>
+      <code>
+        conf/catbox-i2p.conf
+      </code>
+    </p>
+    <p>
+      That’s all the docs I have for now
+    </p>
+    <h1>
+      Why the name?
+    </h1>
+    <p>
+      It was forked from an IRC server called catbox which had a focus on simplicity
+      and understandability. It now has the ability to connect to other IRC servers
+      through I2P Tunnels. Clearnet is to I2P Tunnels is sort of like Catbox is to
+      Terrarium.
+    </p>
+    <h1>
+      Logo
+    </h1>
+    <p>
+      terrarium logo © 2017 Bee
+    </p>
+    <div>
+      <iframe src="https://snowflake.torproject.org/embed.html" width="320" height="240" frameborder="0" scrolling="no"></iframe>
+    </div>
+  </body>
 </html>
