@@ -1,0 +1,301 @@
+<html>
+  <head>
+    <title></title>
+    <meta name="author" content="eyedeekay" />
+    <meta name="description" content="terrarium" />
+    <meta name="keywords" content="master" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="showhider.css" />
+    <link rel="stylesheet" type="text/css" href="darklight.css" />
+  </head>
+  <body>
+    <input type="checkbox" id="checkboxDarkLight">
+    <div class="container">
+    <div id="navbar">
+      <a href="#shownav">
+        Show navigation
+      </a>
+      <div id="shownav">
+        <div id="hidenav">
+          <ul>
+            <li>
+              <a href="..">
+                Up one level ^
+              </a>
+            </li>
+            <li>
+              <a href="index.html">
+                index
+              </a>
+            </li>
+            <li>
+              <a href="CHANGELOG.html">
+                CHANGELOG
+              </a>
+            </li>
+            <li>
+              <a href="index.html">
+                index.html
+              </a>
+            </li>
+            <li>
+              <a href="index.html">
+                index
+              </a>
+            </li>
+            <li>
+              <a href="TODO.html">
+                TODO
+              </a>
+            </li>
+            <li>
+              <a href="catbox.html">
+                catbox
+              </a>
+            </li>
+          </ul>
+          <br>
+          <a href="#hidenav">
+            Hide Navigation
+          </a>
+        </div>
+      </div>
+    </div>
+    <a id="returnhome" href="/">
+      /
+    </a>
+    <h1>
+      TODO
+    </h1>
+    <h2>
+      Higher priority
+    </h2>
+    <ul>
+      <li>
+        Wake up less
+      </li>
+      <li>
+        Back off on connection failures
+      </li>
+      <li>
+        Convert tests to use stretchr/testify.
+      </li>
+      <li>
+        Show IPs to opers in WHOIS with 378 numeric.
+      </li>
+      <li>
+        Op desync issue - should be de-opped if we have an op and link to a
+        server where the channel already exists. Can see not-op on one side and
+        op on the catbox side. I think this is because of us clearing modes on
+        SJOIN commands, but those cleared modes only get sent locally.
+      </li>
+      <li>
+        PASS command for users to authenticate.
+        <ul>
+          <li>
+            Authenticated user should show in WHOIS with 330 numeric.
+          </li>
+        </ul>
+      </li>
+      <li>
+        Automatically spoof people&rsquo;s hosts.
+      </li>
+      <li>
+        WHOWAS.
+      </li>
+      <li>
+        Many log calls should probably go to opers. Right now they will probably
+        always be missed.
+      </li>
+      <li>
+        Additional tests.
+      </li>
+      <li>
+        Loading config should error if there is an unknown option
+      </li>
+      <li>
+        Channel mode +i
+      </li>
+    </ul>
+    <h2>
+      Uncategorized/unprioritized
+    </h2>
+    <ul>
+      <li>
+        Command to dump out entire state. Servers, channels, nicks, modes, etc.
+        This could be used for monitoring that every server is in sync.
+      </li>
+      <li>
+        Switch config to TOML
+      </li>
+      <li>
+        Make canonicalizeNick and canonicalizeChannel return error if the names
+        are invalid? Right now it is a bit error prone because we can
+        canonicalize invalid names.
+      </li>
+      <li>
+        Consider combining cleanup user logic in server&rsquo;s killCommand() with
+        cleanupKilledUser()
+      </li>
+      <li>
+        Consolidate repeated topic setting logic (user TOPIC, server TOPIC, TB)
+      </li>
+      <li>
+        Add command to dump out config (the current catbox config as seen from
+        the config file). Partly this will be useful because not everything gets
+        reloaded on rehash.
+      </li>
+      <li>
+        A command (NSA) to retrieve TLS/ciphers in use by all clients/servers.
+        Sent remotely so each server can get back to us with their local info. It
+        will require a parameter, channel name or mask. So we can see all
+        relevant info for a channel or user, or if an operator, for all users.
+      </li>
+      <li>
+        Limit on number of modes applied only important for modes with
+        parameters? Or only user status modes?
+      </li>
+    </ul>
+    <h2>
+      Lower priority
+    </h2>
+    <ul>
+      <li>
+        PART command can come from server with just nick as prefix rather than
+        UID. Happens using OPME on ratbox. Causes unknown user error and server
+        split
+        <ul>
+          <li>
+            Because I&rsquo;m not linking with ratbox currently.
+          </li>
+        </ul>
+      </li>
+      <li>
+        Log to file
+      </li>
+    </ul>
+    <h2>
+      RFC
+    </h2>
+    <ul>
+      <li>
+        Channel modes: +v/+b/+k/etc
+      </li>
+      <li>
+        KICK
+      </li>
+    </ul>
+    <h1>
+      Maybe
+    </h1>
+    <h2>
+      Unimportant
+    </h2>
+    <ul>
+      <li>
+        NAMES
+      </li>
+      <li>
+        LIST
+      </li>
+      <li>
+        STATS (more flags)
+      </li>
+      <li>
+        ADMIN
+      </li>
+      <li>
+        INFO
+      </li>
+      <li>
+        Multi line motd
+      </li>
+      <li>
+        Respond to remote STATS requests
+      </li>
+      <li>
+        Support sending more remote queries (e.g. STATS to another server)
+      </li>
+      <li>
+        Retain channel creation times and topics through restarts
+      </li>
+    </ul>
+    <h2>
+      Non-standard
+    </h2>
+    <ul>
+      <li>
+        Server console.
+      </li>
+      <li>
+        Inform clients when someone WHOIS&rsquo;s them.
+      </li>
+      <li>
+        Exchange K:Lines during server burst
+      </li>
+      <li>
+        Persistent K:Lines (currently they are in memory only)
+      </li>
+    </ul>
+    <h2>
+      Design
+    </h2>
+    <ul>
+      <li>
+        Drop messageUser/messageFromServer? messageUser all together,
+        messageFromServer to be reply()?
+      </li>
+    </ul>
+    <h1>
+      No
+    </h1>
+    <ul>
+      <li>
+        Bots built into the ircd
+      </li>
+      <li>
+        Daemonize.
+        <ul>
+          <li>
+            There is no support in Go for this right now.
+          </li>
+          <li>
+            Using init system seems sufficient
+          </li>
+        </ul>
+      </li>
+      <li>
+        Upgrade in place without losing connections
+        <ul>
+          <li>
+            Not really feasible with current TLS library as connection state can&rsquo;t
+            be kept.
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div id="sourcecode">
+      <span id="sourcehead">
+        <strong>
+          Get the source code:
+        </strong>
+      </span>
+      <ul>
+        <li>
+          <a href="https://github.com/eyedeekay/terrarium.git">
+            Source Repository: (https://github.com/eyedeekay/terrarium.git)
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <iframe src="https://snowflake.torproject.org/embed.html" width="320" height="240" frameborder="0" scrolling="no"></iframe>
+    </div>
+    <div>
+      <a href="https://geti2p.net/">
+        <img class="i2plogo" src="i2plogo.png"></img>
+        I2P
+      </a>
+    </div>
+  </body>
+</html>

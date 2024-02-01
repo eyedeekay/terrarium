@@ -2,11 +2,15 @@
   <head>
     <title></title>
     <meta name="author" content="eyedeekay" />
-    <meta name="description" content="terrarium.git" />
+    <meta name="description" content="terrarium" />
     <meta name="keywords" content="master" />
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="showhider.css" />
+    <link rel="stylesheet" type="text/css" href="darklight.css" />
   </head>
   <body>
+    <input type="checkbox" id="checkboxDarkLight">
+    <div class="container">
     <div id="navbar">
       <a href="#shownav">
         Show navigation
@@ -14,6 +18,11 @@
       <div id="shownav">
         <div id="hidenav">
           <ul>
+            <li>
+              <a href="..">
+                Up one level ^
+              </a>
+            </li>
             <li>
               <a href="index.html">
                 index
@@ -24,6 +33,26 @@
                 CHANGELOG
               </a>
             </li>
+            <li>
+              <a href="index.html">
+                index.html
+              </a>
+            </li>
+            <li>
+              <a href="doc/index.html">
+                doc/index
+              </a>
+            </li>
+            <li>
+              <a href="doc/TODO.html">
+                doc/TODO
+              </a>
+            </li>
+            <li>
+              <a href="doc/catbox.html">
+                doc/catbox
+              </a>
+            </li>
           </ul>
           <br>
           <a href="#hidenav">
@@ -32,24 +61,26 @@
         </div>
       </div>
     </div>
-    <a href="/"></a>
+    <a id="returnhome" href="/">
+      /
+    </a>
     <h1>
-      <img src="doc/terrarium-with-text.png" alt="terrarium"/>
+      <img src="doc/terrarium-with-text.png" alt="terrarium" />
     </h1>
     <p>
-      <a href="https://travis-ci.org/eyedeekay/terrarium" rel="nofollow">
+      <a href="https://travis-ci.org/eyedeekay/terrarium">
         <img src="https://travis-ci.org/eyedeekay/terrarium.svg" alt="Build
-Status"/>
+Status" />
       </a>
-      <a href="https://goreportcard.com/report/i2pgit.org/idk/terrarium" rel="nofollow">
+      <a href="https://goreportcard.com/report/i2pgit.org/idk/terrarium">
         <img src="https://goreportcard.com/badge/i2pgit.org/idk/terrarium" alt="Go Report
-Card"/>
+Card" />
       </a>
     </p>
     <p>
       terrarium is an IRC server with a focus on being small and understandable,
       originally forked from
-      <a href="https://github.com/horgh/catbox" rel="nofollow">
+      <a href="https://github.com/horgh/catbox">
         horgh/catbox
       </a>
       . The
@@ -70,7 +101,7 @@ Card"/>
         IRC operators
       </li>
       <li>
-        Private (WHOIS shows no channels, LIST isn’t supported)
+        Private (WHOIS shows no channels, LIST isn&rsquo;t supported)
       </li>
       <li>
         Flood protection
@@ -84,7 +115,7 @@ Card"/>
     </ul>
     <p>
       terrarium implements enough of
-      <a href="https://tools.ietf.org/html/rfc1459" rel="nofollow">
+      <a href="https://tools.ietf.org/html/rfc1459">
         RFC 1459
       </a>
       to be recognisable as IRC and be minimally functional. It will intentionally
@@ -92,10 +123,10 @@ Card"/>
       and provide more flexible security.
     </p>
     <h1>
-      Plugin Installation URL’s
+      Plugin Installation URL&rsquo;s
     </h1>
     <p>
-      <a href="https://geti2p.net/en/docs/plugins" rel="nofollow">
+      <a href="https://geti2p.net/en/docs/plugins">
         A guide to installing I2P plugins can be found on the I2P web site.
       </a>
     </p>
@@ -104,12 +135,12 @@ Card"/>
     </h3>
     <ul>
       <li>
-        <a href="http://idk.i2p/terrarium/terrarium-windows-amd64.su3" rel="nofollow">
+        <a href="http://idk.i2p/terrarium/terrarium-windows-amd64.su3">
           Windows (In-I2P)
         </a>
       </li>
       <li>
-        <a href="http://idk.i2p/terrarium/terrarium-linux-amd64.su3" rel="nofollow">
+        <a href="http://idk.i2p/terrarium/terrarium-linux-amd64.su3">
           Linux (In-I2P)
         </a>
       </li>
@@ -119,12 +150,12 @@ Card"/>
     </h3>
     <ul>
       <li>
-        <a href="https://github.com/terrarium/blizzard/releases" rel="nofollow">
+        <a href="https://github.com/terrarium/blizzard/releases">
           Windows
         </a>
       </li>
       <li>
-        <a href="https://github.com/terrarium/blizzard/releases" rel="nofollow">
+        <a href="https://github.com/terrarium/blizzard/releases">
           Linux
         </a>
       </li>
@@ -135,7 +166,7 @@ Card"/>
     <ol>
       <li>
         Clone the software from
-        <a href="https://i2pgit.org/idk/terrarium" rel="nofollow">
+        <a href="https://i2pgit.org/idk/terrarium">
           i2pgit.org
         </a>
         (
@@ -217,7 +248,7 @@ Card"/>
         server1.example.com, and the network hostname, e.g. irc.example.com.
       </li>
       <li>
-        Set up irc.example.com with DNS round-robin listing each server’s IP.
+        Set up irc.example.com with DNS round-robin listing each server&rsquo;s IP.
       </li>
       <li>
         List each server by its own hostname in servers.conf.
@@ -239,7 +270,7 @@ Card"/>
       </code>
     </p>
     <p>
-      That’s all the docs I have for now
+      That&rsquo;s all the docs I have for now
     </p>
     <h1>
       Why the name?
@@ -254,13 +285,28 @@ Card"/>
       Logo
     </h1>
     <p>
-      terrarium logo © 2017 Bee
+      terrarium logo &copy; 2017 Bee
     </p>
+    <div id="sourcecode">
+      <span id="sourcehead">
+        <strong>
+          Get the source code:
+        </strong>
+      </span>
+      <ul>
+        <li>
+          <a href="https://github.com/eyedeekay/terrarium.git">
+            Source Repository: (https://github.com/eyedeekay/terrarium.git)
+          </a>
+        </li>
+      </ul>
+    </div>
     <div>
       <iframe src="https://snowflake.torproject.org/embed.html" width="320" height="240" frameborder="0" scrolling="no"></iframe>
     </div>
     <div>
       <a href="https://geti2p.net/">
+        <img class="i2plogo" src="i2plogo.png"></img>
         I2P
       </a>
     </div>

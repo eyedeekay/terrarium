@@ -1,0 +1,273 @@
+<html>
+  <head>
+    <title></title>
+    <meta name="author" content="eyedeekay" />
+    <meta name="description" content="terrarium" />
+    <meta name="keywords" content="master" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="showhider.css" />
+    <link rel="stylesheet" type="text/css" href="darklight.css" />
+  </head>
+  <body>
+    <input type="checkbox" id="checkboxDarkLight">
+    <div class="container">
+    <div id="navbar">
+      <a href="#shownav">
+        Show navigation
+      </a>
+      <div id="shownav">
+        <div id="hidenav">
+          <ul>
+            <li>
+              <a href="..">
+                Up one level ^
+              </a>
+            </li>
+            <li>
+              <a href="index.html">
+                index
+              </a>
+            </li>
+            <li>
+              <a href="CHANGELOG.html">
+                CHANGELOG
+              </a>
+            </li>
+            <li>
+              <a href="index.html">
+                index.html
+              </a>
+            </li>
+            <li>
+              <a href="index.html">
+                index
+              </a>
+            </li>
+            <li>
+              <a href="TODO.html">
+                TODO
+              </a>
+            </li>
+            <li>
+              <a href="catbox.html">
+                catbox
+              </a>
+            </li>
+          </ul>
+          <br>
+          <a href="#hidenav">
+            Hide Navigation
+          </a>
+        </div>
+      </div>
+    </div>
+    <a id="returnhome" href="/">
+      /
+    </a>
+    <p>
+      This file holds information that is more useful for developers or is a bit
+      too in depth to be in the REAMDE.
+    </p>
+    <h1>
+      Design philosophy
+    </h1>
+    <ul>
+      <li>
+        Support a subset of RFC 2812 / 1459 which I think makes sense. In
+        practice this means what is critical for a minimal IRC server. This is
+        also influenced by how the network I run operates (typically no channel
+        operators and well behaved users), meaning we don&rsquo;t need many things,
+        such as many channel modes.
+      </li>
+      <li>
+        Minimal configuration.
+      </li>
+      <li>
+        Simple and extensible.
+      </li>
+      <li>
+        If there are extra parameters to commands, ignore them.
+      </li>
+    </ul>
+    <h1>
+      Some differences from RFC 2812 / RFC 1459
+    </h1>
+    <p>
+      This is not exhaustive.
+    </p>
+    <ul>
+      <li>
+        Only # channels supported.
+      </li>
+      <li>
+        Much more restricted characters in channels/nicks/users.
+      </li>
+      <li>
+        Do not support parameters to the LUSERS command.
+      </li>
+      <li>
+        Do not support parameters to the MOTD command.
+      </li>
+      <li>
+        Not supporting forwarding PING/PONG to other servers (by users).
+      </li>
+      <li>
+        No wildcards or target server support in WHOIS command.
+      </li>
+      <li>
+        Added DIE command.
+      </li>
+      <li>
+        WHOIS command: No server target, and only single nicks.
+      </li>
+      <li>
+        WHOIS command: Currently not going to show any channels.
+      </li>
+      <li>
+        WHOIS command: Always send to remote server if remote user.
+      </li>
+      <li>
+        User modes: Only +oiC
+      </li>
+      <li>
+        Channel modes: Only +nos
+      </li>
+      <li>
+        WHO: Support only &lsquo;WHO #channel&rsquo;. And shows all nicks on that channel.
+      </li>
+      <li>
+        CONNECT: Single parameter only.
+      </li>
+      <li>
+        LINKS: No parameters supported.
+      </li>
+      <li>
+        LUSERS: Include +s channels in channel count.
+      </li>
+      <li>
+        VERSION: No parameter used.
+      </li>
+      <li>
+        TIME: No parameter used.
+      </li>
+      <li>
+        WHOWAS: Always say no such nick.
+      </li>
+    </ul>
+    <h1>
+      How flood control works
+    </h1>
+    <ul>
+      <li>
+        Each client has a counter that starts out at UserMessageLimit (10)
+      </li>
+      <li>
+        Every message we process from the client, we decrement it by one.
+      </li>
+      <li>
+        If the counter is zero, we queue the message.
+      </li>
+      <li>
+        Each second (woken by our alarm goroutine), we increment the client&rsquo;s
+        counter by 1 to a maximum of UserMessageLimit, and process queued messages
+        until the counter is zero.
+      </li>
+      <li>
+        If there are too many queued messages, we disconnect the client for
+        flooding (ExcessFloodThreshold).
+      </li>
+    </ul>
+    <p>
+      This is similar to ircd-ratbox&rsquo;s algorithm.
+    </p>
+    <p>
+      While client message events and alarm events go to the same channel, if a client
+      sends a large number of messages, they will trigger an excess flood. This means
+      the daemon should not be overwhelmed by a single client.
+    </p>
+    <h1>
+      External documentation and references
+    </h1>
+    <ul>
+      <li>
+        <a href="https://tools.ietf.org/html/rfc2812">
+          https://tools.ietf.org/html/rfc2812
+        </a>
+      </li>
+      <li>
+        <a href="https://tools.ietf.org/html/rfc1459">
+          https://tools.ietf.org/html/rfc1459
+        </a>
+      </li>
+      <li>
+        TS6 docs:
+        <ul>
+          <li>
+            charybdis&rsquo;s ts6-protocol.txt
+          </li>
+          <li>
+            ircd-ratbox&rsquo;s ts6.txt, ts5.txt, README.TSora
+          </li>
+        </ul>
+      </li>
+      <li>
+        ircv3
+      </li>
+      <li>
+        <a href="http://ircdocs.horse/">
+          http://ircdocs.horse/
+        </a>
+      </li>
+    </ul>
+    <h2>
+      TS6 notes
+    </h2>
+    <ul>
+      <li>
+        Nick TS changes when: Client connects or when it changes its nick.
+      </li>
+      <li>
+        Channel TS changes when: Channel created
+      </li>
+      <li>
+        Server to server (ircd-ratbox) commands I&rsquo;m most interested in:
+        <ul>
+          <li>
+            Burst: SID, UID, SJOIN, ERROR, PING, PONG
+          </li>
+          <li>
+            Post-burst: INVITE, JOIN, KILL, NICK, NOTICE, PART, PRIVMSG, QUIT, SID,
+            SJOIN, TOPIC, UID, SQUIT, ERROR, PING, PONG, MODE (user)
+          </li>
+        </ul>
+      </li>
+      <li>
+        I believe &ldquo;simple modes&rdquo; are things like +ntisk. As opposed to status modes
+        such as +o/+v. Ban/exemption type modes are not simple either.
+      </li>
+    </ul>
+    <div id="sourcecode">
+      <span id="sourcehead">
+        <strong>
+          Get the source code:
+        </strong>
+      </span>
+      <ul>
+        <li>
+          <a href="https://github.com/eyedeekay/terrarium.git">
+            Source Repository: (https://github.com/eyedeekay/terrarium.git)
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <iframe src="https://snowflake.torproject.org/embed.html" width="320" height="240" frameborder="0" scrolling="no"></iframe>
+    </div>
+    <div>
+      <a href="https://geti2p.net/">
+        <img class="i2plogo" src="i2plogo.png"></img>
+        I2P
+      </a>
+    </div>
+  </body>
+</html>
